@@ -1,8 +1,8 @@
 # My Neovim 0.12-dev config to single lua file
-> In ''lua vim.pack.add''
-=
 ## Plugin list
--
+> In ```lua 
+    vim.pack.add()
+```\
 * Nvim-lspconfig
 * Catppuccin nvim
 * Mason.nvim
