@@ -1,6 +1,6 @@
 # My Neovim 0.12-dev config to single lua file
+> In *vim.pack.add()*\
 ## Plugin list
-> In 
 ```lua 
 vim.pack.add()
 ```
