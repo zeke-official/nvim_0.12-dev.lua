@@ -18,6 +18,7 @@ vim.pack.add({
   {src='https://github.com/hrsh7th/cmp-buffer'},
   {src='https://github.com/dgagn/diagflow.nvim'},
   {src='https://github.com/nvim-telescope/telescope.nvim'},
+  {src='https://github.com/nvim-telescope/telescope-ui-select.nvim'},
   {src='https://github.com/anurag3301/nvim-platformio.lua'},
   {src='https://github.com/nvim-lualine/lualine.nvim'},
   {src='https://github.com/akinsho/toggleterm.nvim'},
@@ -27,6 +28,7 @@ vim.pack.add({
 vim.g.mapleader = " "
 vim.o.number = true
 vim.o.relativenumber = true
+vim.o.wrap = false
 vim.o.cursorline = true
 vim.o.swapfile = false
 vim.o.confirm = true
@@ -138,6 +140,7 @@ cmp.setup({
 })
 
 require("toggleterm").setup {size=7, open_mapping=[[<c-j>]], direcrion='float'}
+require("telescope").load_extension("ui-select")
 
 local opts = { noremap = true, silent = true }
 local builtin = require("telescope.builtin")
