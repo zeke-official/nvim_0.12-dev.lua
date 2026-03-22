@@ -22,6 +22,7 @@ vim.pack.add()
 * Toggleterm.nvim
 * Lualine.nvim
 * Diagflow.nvim
+* Roslyn.nvim
 * Nvim-cmp
     * Cmp-nvim-lsp
     * Cmp-path
