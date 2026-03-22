@@ -23,6 +23,7 @@ vim.pack.add({
   {src='https://github.com/nvim-lualine/lualine.nvim'},
   {src='https://github.com/akinsho/toggleterm.nvim'},
   {src='https://github.com/numToStr/Comment.nvim'},
+  {src='https://github.com/seblyng/roslyn.nvim'},
 })
 
 vim.g.mapleader = " "
@@ -49,7 +50,7 @@ vim.lsp.enable("basedpyright")
 vim.lsp.enable("clangd")
 
 require("catppuccin").setup({
-  flavour = "macchiato", 
+  flavour = "macchiato",
   integrations = { cmp = true, barbar = true, neotree = true, },
 })
 vim.cmd.colorscheme "catppuccin"
@@ -73,7 +74,7 @@ require('neo-tree').setup {
 require('diagflow').setup({
   enable = true, max_width = 35, max_height = 10, show_borders = true,
   border_chars = {
-    top_left = "╭", top_right = "╮", bottom_left = "╰", 
+    top_left = "╭", top_right = "╮", bottom_left = "╰",
     bottom_right = "╯", horizontal = "─", vertical = "│"
   },
 })
@@ -100,13 +101,21 @@ require('lualine').setup {
 
 require("nvim-autopairs").setup()
 
+
 local pok, platformio = pcall(require, 'platformio')
 if pok then platformio.setup({lsp = 'clangd', clangd_source = "compiledb"}) end
 
-require("mason").setup()
+require("mason").setup({
+  registries = {
+    "github:mason-org/mason-registry", "github:Crashdummyy/mason-registry",
+  },
+})
+
 require("mason-lspconfig").setup({
   ensure_installed = {"lua_ls", "basedpyright", "clangd"}
 })
+
+require("roslyn").setup()
 
 require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -168,10 +177,13 @@ vim.keymap.set('n', '<A-c>', '<Cmd>BufferClose<CR>', opts)
 vim.keymap.set("v", "<leader>c", '"+y')
 vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<Tab>", ">gv")
+vim.keymap.set("v", "<S-Tab>", "<gv")
 vim.keymap.set("n", "<Esc><Esc>", ":noh<CR>")
 
 vim.api.nvim_create_augroup('s2_tab', { clear = true })
 vim.api.nvim_create_augroup('mk_tab', { clear = true })
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   group = 's2_tab', pattern = { '*.lua' },
   callback = function()
@@ -180,6 +192,7 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
     vim.bo.softtabstop = 2
   end
 })
+
 vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   group = 'mk_tab', pattern = { '[Mm]akefile', '*.mk' },
   callback = function()
