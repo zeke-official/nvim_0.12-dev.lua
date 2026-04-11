@@ -7,10 +7,13 @@ vim.pack.add({
   {src='https://github.com/nvim-tree/nvim-web-devicons'},
   {src='https://github.com/nvim-neo-tree/neo-tree.nvim'},
   {src='https://github.com/nvim-lua/plenary.nvim'},
+  {src='https://github.com/nvim-treesitter/nvim-treesitter'},
+  {src='https://github.com/olimorris/codecompanion.nvim'},
   {src='https://github.com/MunifTanjim/nui.nvim'},
   {src='https://github.com/windwp/nvim-autopairs'},
   {src='https://github.com/onsails/lspkind.nvim'},
   {src='https://github.com/L3MON4D3/LuaSnip'},
+  {src="https://github.com/saadparwaiz1/cmp_luasnip"},
   {src='https://github.com/rafamadriz/friendly-snippets'},
   {src='https://github.com/hrsh7th/nvim-cmp'},
   {src='https://github.com/hrsh7th/cmp-nvim-lsp'},
@@ -117,16 +120,33 @@ require("mason-lspconfig").setup({
 
 require("roslyn").setup()
 
+require("codecompanion").setup({
+  adapters = {
+    http = {
+      ollama = function()
+        return require("codecompanion.adapters").extend("openai_compatible", {
+          env = { url = "http://192.168.56.1:1234", },
+        })
+      end,
+    },
+  },
+  interactions = { chat={adapter = "ollama",}, inline={adapter = "ollama",}, },
+  display = { chat = { window = { position = "right", width = 0.35, }, }, },
+})
+
 require("luasnip.loaders.from_vscode").lazy_load()
 
 local cmp = require("cmp")
 cmp.setup({
   completion = { autocomplete = false, },
+  snippet = {
+    expand = function(args) require('luasnip').lsp_expand(args.body) end
+  },
   sources = {
     {name = "nvim_lsp"}, {name = "luasnip"}, {name = 'buffer'}, {name = 'path'}
   },
   mapping = cmp.mapping.preset.insert({
-    ["<C-s>"] = cmp.mapping.complete(),
+    ["<C-a>"] = cmp.mapping.complete(),
     ["<CR>"] = cmp.mapping.confirm({select = true}),
     ["<Tab>"] = cmp.mapping.select_next_item(),
     ["<S-Tab>"] = cmp.mapping.select_prev_item(),
@@ -180,6 +200,9 @@ vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<Tab>", ">gv")
 vim.keymap.set("v", "<S-Tab>", "<gv")
 vim.keymap.set("n", "<Esc><Esc>", ":noh<CR>")
+vim.keymap.set("n", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>")
+vim.keymap.set("n", "<leader>ai", "<cmd>CodeCompanion<cr>")
+vim.keymap.set("n", "<leader>aa", "<cmd>CodeCompanionActions<cr>")
 
 vim.api.nvim_create_augroup('s2_tab', { clear = true })
 vim.api.nvim_create_augroup('mk_tab', { clear = true })
